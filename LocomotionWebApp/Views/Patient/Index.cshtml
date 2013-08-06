@@ -1,0 +1,290 @@
+﻿@model LocomotionWebApp.Models.ViewModels.PatientListViewModel
+
+
+@{
+}
+
+@section Title
+{
+	Patients
+}
+
+@section Scripts{
+
+
+	@if (ViewBag.UploadAlert != null)
+ {
+		<script type="text/javascript">
+			//var isFormValid = ;
+			$(function () {
+				$('#addPatient').modal('show');
+			});
+		</script>
+	}
+
+	@if (ViewBag.UrlUploadAlert != null)
+ {
+		<script type="text/javascript">
+			//var isFormValid = ;
+			$(function () {
+				$('#addPatientUrl').modal('show');
+			});
+		</script>
+	}
+
+	<script type="text/javascript">
+		$(function () {
+			$("#createNetBtn").add("#createNetUrlBtn")
+				.click(function (e) {
+					$(this).closest(".modal-footer").find(".spinner").show();
+					$(this).parent().find("button").addClass("disabled");
+					$(this).attr("type", "button");
+					$(this).unbind("click");
+					$(this).closest("form").submit();
+				}
+			);
+		});
+	</script>
+
+	<script type="text/javascript">
+		$(function () {
+			if ($(".patient-data-table thead").size() > 0)
+				$(".patient-data-table").dataTable({
+					"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+					"aoColumns": [
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						{ "asSorting": [] }
+					]
+				});
+		});
+	</script>
+}
+
+<div class="container">
+	<div class="row">
+		<div class="span12">
+			<br />
+			@if(ViewBag.Alert != null)
+			{ 
+			<div class="alert @Html.Raw(ViewBag.AlertClass != null ? ViewBag.AlertClass : "")">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<strong>@Html.Raw(ViewBag.Alert)</strong>
+
+				@if (ViewBag.NewPatientID != null)
+				{ 
+					<a href="@Url.Action("View", "Patient", new { id = ViewBag.NewPatientID})"
+						class="btn btn-small btn-primary">Profile</a>
+				}
+			</div>
+			}
+		</div>
+	</div>
+	<div class="row">
+		<div class="span12">
+			<h2 style="margin-bottom: 25px;">Patients
+				<a class="btn btn-primary btn-small"
+				href="#addPatientBlank" data-toggle="modal" style="margin-top: 20px; float:right;">
+				<i class="icon-plus-sign"></i>
+				Add New Patient
+				</a> 
+			</h2>
+
+			<table class="patient-data-table">
+			@Html.Partial("_PatientTableView", Model)
+			</table>
+		</div>
+	</div>
+	<div class="row" style="font-size: 9px; color: #999; text-align: center;">
+		<div class="span12"></div>
+			<br />
+			The KOAALAClinic is a prototype; Madonna Rehabilitation Hospital takes no liability for use of this software
+			| <a href="email:katerilett@gmail.com">Contact Us</a>
+			| © 2013 
+		</div>
+</div>
+
+
+@using(Html.BeginForm("CreateBlank", "Patient", FormMethod.Post, new {
+	enctype = "multipart/form-data", @class = "form-horizontal"
+}))
+{ 
+	<div id="addPatientBlank"
+		class="modal hide @Html.Raw(ViewBag.UploadAlert == null ? "fade" : "")"
+		tabindex="-1" role="dialog"
+		aria-labelledby="newPatientLabel" aria-hidden="true" >
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="newBlankPatientLabel">Add New Patient</h3>
+		</div>
+		<form class="form-horizontal" method="post" enctype="multipart/form-data">
+			<div class="modal-body">
+
+				<div class="control-group">
+					<label class="control-label" for="BlankPatientFirstName">
+						First Name
+						<a href="#" rel="tooltip" title="Tootlsef"><i class="icon-question-sign"></i></a>
+					</label>
+					<div class="controls">
+						<input type="text" id="BlankPatientFirstName" name="PatientFirstName"
+							placeholder="New patient first name" required />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="BlankPatientLastName">
+						Last Name
+						<a href="#" rel="tooltip" title="Tootlsef"><i class="icon-question-sign"></i></a>
+					</label>
+					<div class="controls">
+						<input type="text" id="BlankPatientLastName" name="PatientLastName"
+							placeholder="New patient last name" required />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="BlankPatientBirthday">
+						Birthday
+					</label>
+					<div class="controls">
+						<input type="date" id="BlankPatientBirthday" name="PatientBirthday" required />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="BlankPatientGender">
+						Sex
+					</label>
+					<div class="controls">
+						<select id="BlankPatientGender" name="PatientGender" required>
+							<option>Female</option>
+							<option>Male</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="BlankPatientFeet, BlankPatientInches">
+						Height (feet)
+					</label> 
+					<div class="controls controls-row">
+						<input type="number" class="span1" step="1" id="BlankPatientFeet" name="PatientFeet" required />
+						<div class="span2" style="margin-left: 15px;">
+							(inches)
+							<input type="number" class="input-mini" step="1" id="BlankPatientInches" name="PatientInches" required />
+						</div>
+					</div>
+				</div>
+
+
+			@*	<div class="control-group">
+					<label class="control-label" for="BlankPatientInches">
+						(inches)
+					</label>
+					<div class="controls">
+						<input type="number" class="input-small" step="1" id="BlankPatientInches" name="PatientInches" required />
+					</div>
+				</div>*@
+
+				<div class="control-group">
+					<label class="control-label" for="BlankPatientWeight">
+						Weight (lbs)
+					</label>
+					<div class="controls">
+						<input type="number" step="any" id="BlankPatientWeight" name="PatientWeight" required />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="BlankPatientDoctor">
+						Physician
+					</label>
+					<div class="controls">
+						<input type="text" id="BlankPatientDoctor" name="PatientDoctor"
+							placeholder="Patient's Doctor" required />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="BlankPatientArthritisType">
+						Arthritis Type
+					</label>
+					<div class="controls">
+						<select id="BlankPatientArthritisType" name="PatientArthritisType" required>
+							<option>Unicompartmental</option>
+							<option>Bicompartmental</option>
+							<option>Patellofemoral</option>
+						</select>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="BlankPatientAffectedExtremity">
+						Affected Extremity
+					</label>
+					<div class="controls">
+						<select id="BlankPatientAffectedExtremity" name="PatientAffectedExtremity" required>
+							<option>Left</option>
+							<option>Right</option>
+							<option>Both</option>
+						</select>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="BlankPatientDeformity">
+						Deformity
+					</label>
+					<div class="controls">
+						<select id="BlankPatientDeformity" name="PatientDeformity" required>
+							<option>Valgus</option>
+							<option>Varus</option>
+						</select>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="BlankPatientCity">
+						Current City
+					</label>
+					<div class="controls">
+						<input type="text" id="BlankPatientCity" name="PatientCity"
+							placeholder="Patient's City of Residence" required />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="BlankPatientPhoneNumber">
+						Phone Number
+					</label>
+					<div class="controls">
+						<input type="tel" id="BlankPatientPhoneNumber" name="PatientPhoneNumber" required />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="BlankPatientEmail">
+						Email
+					</label>
+					<div class="controls">
+						<input type="text" id="BlankPatientEmail" name="PatientEmail"
+							value="Not entered" required />
+					</div>
+				</div>
+			</div>
+
+			@if (ViewBag.UploadAlert != null)
+   { 
+				<div class="alert fade in">
+					<button type="button" class="close" data-dismiss="alert">x</button>
+					@Html.Raw(ViewBag.UploadAlert)
+				</div>
+			}
+			<div class="modal-footer">
+				<span class="spinner" style="display: none;">
+					<img src="/Content/img/ajax-loader.gif" /></span>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button type="submit" id="createBlankNetBtn" class="btn btn-primary">Create Patient</button>
+			</div>
+		</form>
+	</div>
+}
+
+
+
+
+

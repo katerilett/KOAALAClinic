@@ -1,0 +1,766 @@
+﻿@model LocomotionWebApp.Models.ViewModels.PatientViewModel
+
+
+@section Title
+{
+	Patient	
+}
+
+@section Scripts
+{ 
+	<script type="text/javascript">	
+
+		function activateForm(target) {
+			var title = $("#"+target+" .modal-header h3").html();
+			var body = $("#"+target+" .modal-body").html();
+			var buttons = $("#"+target+" .modal-footer").html();
+
+			var formobj = $("#"+target).closest("form");
+			var action = formobj.attr("action");
+
+			var passByAjax = $("#"+target+" .modal-footer").attr("data-ajax");
+			if(passByAjax == undefined)
+				passByAjax = true;
+
+			$("#jsModal .CheckBox").val(true);
+
+			popupModalFullHtml(title, body, buttons);
+
+			$("#jsModalForm").attr("action", action);
+
+			$("#jsModalForm").unbind("submit");
+			if(passByAjax == true) {
+				$("#jsModalForm").submit(function (e) {
+
+					e.preventDefault();
+					var formdata = $("#jsModalForm").serializeArray();
+
+					$.post(action,
+						formdata,
+						function(data, status, jqXHR) {
+							if (data.success) {
+								infoWindow.close();
+								loadPatient();
+								loadOptimization();
+								if (addingAnother) {
+								} else {
+									$("#jsModal").modal("hide");
+								}
+								addingAnother = false;
+							}
+						}
+					);
+				});
+			}
+		}
+	</script>
+
+	<script type="text/javascript">
+
+		$(document).ready(function () {
+			
+			$('#collapseOne').on('hide', function () {
+				$(".basicProfile").removeClass("icon-chevron-up").addClass("icon-chevron-down");
+			})
+
+			$('#collapseOne').on('show', function () {
+				$(".basicProfile").removeClass("icon-chevron-down").addClass("icon-chevron-up");
+			})
+
+			$('#collapseTwo').on('hide', function () {
+				$(".medicalProfile").removeClass("icon-chevron-up").addClass("icon-chevron-down");
+			})
+
+			$('#collapseTwo').on('show', function () {
+				$(".medicalProfile").removeClass("icon-chevron-down").addClass("icon-chevron-up");
+			})
+		});
+
+
+	</script>
+
+}
+
+
+@section NextToLogo
+{
+	<!--Could be used to put Patient Name in top bar -->
+@*	<p class="nav navbar-text" style="color: #000;">
+		<em>@Html.Raw(Model.LastName)</em>
+	</p>*@
+} 
+
+@section Header
+{
+}
+
+<!-- Code for modals -->
+@using(Html.BeginForm("EditPatient", "Patient", FormMethod.Post, new {
+	enctype = "multipart/form-data", @class = "form-horizontal"
+}))
+{ 
+	<div id="editPatientModal"
+		class="modal hide @Html.Raw(ViewBag.UploadAlert == null ? "fade" : "")"
+		tabindex="-1" role="dialog"
+		aria-labelledby="newPatientLabel" aria-hidden="true" >
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="editPatientLabel">Edit Patient Information</h3>
+		</div>
+		<form class="form-horizontal" method="post" enctype="multipart/form-data">
+			<div class="modal-body">
+				<div class="control-group">
+					<label class="control-label" for="PatientBirthday">
+						Birthday
+					</label>
+					<div class="controls">	
+						<input type="date" id="PatientBirthday" name="PatientBirthday" 		
+							value="@Html.DisplayFor(m => Model.BirthdayHtml, new { required ="true", @class = "BirthdayHtml" })" required />	
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientGender">
+						Sex
+					</label>
+					@if (Model.Gender == "Female") {
+						<div class="controls">	
+								<select id="PatientGender1" name="PatientGender" required>
+									<option selected>Female</option>
+									<option>Male</option>
+								</select>				
+						</div>
+					}
+					@if (Model.Gender == "Male") {
+						<div class="controls">	
+								<select id="PatientGender2" name="PatientGender" required>
+									<option>Female</option>
+									<option selected>Male</option>
+								</select>				
+						</div>
+					}
+					@if (Model.Gender != "Female" && Model.Gender != "Male") {
+						<div class="controls">	
+								<select id="PatientGender3" name="PatientGender" required>
+									<option>Female</option>
+									<option>Male</option>
+								</select>				
+						</div>
+					}
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientHeight">
+						Height
+					</label>
+					<div class="controls">	
+						<input type="number" step="any" id="PatientHeight" name="PatientHeight" 		
+							value="@Html.DisplayFor(m => Model.Height, new { required ="true", @class = "Height" })" required />							
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientWeight">
+						Weight (lbs)
+					</label>
+					<div class="controls">	
+						<input type="number" step="any" id="PatientWeight" name="PatientWeight" 		
+							value="@Html.DisplayFor(m => Model.Weight, new { required ="true", @class = "Weight" })" required />							
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientDoctor">
+						Physician
+					</label>
+					<div class="controls">	
+						<input type="text" id="PatientDoctor" name="PatientDoctor" 		
+							value="@Html.DisplayFor(m => Model.Doctor, new { required ="true", @class = "Doctor" })" required />							
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientCity">
+						Current City
+					</label>
+					<div class="controls">	
+						<input type="text" id="PatientCity" name="PatientCity" 		
+							value="@Html.DisplayFor(m => Model.City, new { required ="true", @class = "City" })" required />							
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientEmail">
+						Email
+					</label>
+					<div class="controls">	
+						<input type="text" id="PatientEmail" name="PatientEmail" 		
+							value="@Html.DisplayFor(m => Model.Email, new { required ="true", @class = "Email" })" required />							
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientPhoneNumber">
+						Phone Number
+					</label>
+					<div class="controls">	
+						<input type="text" id="PatientPhoneNumber" name="PatientPhoneNumber" 		
+							value="@Html.DisplayFor(m => Model.PhoneNumber, new { required ="true", @class = "PhoneNumber" })" required />							
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientID"></label>
+					<div class="controls">
+						@Html.HiddenFor(m => Model.ID, new { placeholder = @Model.ID})	
+					</div>
+				</div>
+
+			</div>
+
+			@if(ViewBag.UploadAlert != null)
+			{ 
+				<div class="alert fade in">
+					<button type="button" class="close" data-dismiss="alert">x</button>
+					@Html.Raw(ViewBag.UploadAlert)
+				</div>
+			}
+			<div class="modal-footer">
+				<span class="spinner" style="display: none;"><img src="/Content/img/ajax-loader.gif" /></span>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button type="submit" class="btn btn-primary">Save Changes</button>
+			</div>
+		</form>
+	</div>
+}
+
+@using(Html.BeginForm("EditMedical", "Patient", FormMethod.Post, new {
+	enctype = "multipart/form-data", @class = "form-horizontal"
+}))
+{ 
+	<div id="editMedicalModal"
+		class="modal hide @Html.Raw(ViewBag.UploadAlert == null ? "fade" : "")"
+		tabindex="-1" role="dialog"
+		aria-labelledby="newPatientLabel" aria-hidden="true" >
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="editMedicalLabel">Edit Arthritis Information</h3>
+		</div>
+		<form class="form-horizontal" method="post" enctype="multipart/form-data">
+			<div class="modal-body">
+				<div class="control-group">
+					<label class="control-label" for="PatientArthritisType">
+						Arthritis Type
+					</label>
+					<!-- There has to be a better way to do this, please don't judge me -->
+					@if (Model.ArthritisType == "Unicompartmental") {
+						<div class="controls">
+							<select id="PatientArthritisType1" name="PatientArthritisType" required>
+								<option selected>Unicompartmental</option>
+								<option>Bicompartmental</option>
+								<option>Patellofermoral</option>
+							</select>
+						</div>
+					}
+					@if (Model.ArthritisType == "Bicompartmental") {
+						<div class="controls">
+							<select id="PatientArthritisType2" name="PatientArthritisType" required>
+								<option>Unicompartmental</option>
+								<option selected>Bicompartmental</option>
+								<option>Patellofermoral</option>
+							</select>
+						</div>
+					}
+					@if (Model.ArthritisType == "Patellofemoral") {
+						<div class="controls">
+							<select id="PatientArthritisType3" name="PatientArthritisType" required>
+								<option>Unicompartmental</option>
+								<option>Bicompartmental</option>
+								<option selected>Patellofermoral</option>
+							</select>
+						</div>
+					}
+					@if (Model.ArthritisType != "Patellofemoral" && Model.ArthritisType != "Bicompartmental" && Model.ArthritisType != "Unicompartmental") {
+						<div class="controls">
+							<select id="PatientArthritisType4" name="PatientArthritisType" required>
+								<option>Unicompartmental</option>
+								<option>Bicompartmental</option>
+								<option selected>Patellofermoral</option>
+							</select>
+						</div>
+					}
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientAffectedExtremity">
+						Affected Extremity 
+					</label>
+					@if (Model.AffectedExtremity == "Left") {
+						<div class="controls">	
+							<select id="PatientAffectedExtremity1" name="PatientAffectedExtremity" required>
+								<option selected>Left</option>
+								<option>Right</option>
+								<option>Both</option>
+						</select>							
+					</div>
+					}
+					@if (Model.AffectedExtremity == "Right") {
+						<div class="controls">	
+							<select id="PatientAffectedExtremity2" name="PatientAffectedExtremity" required>
+								<option>Left</option>
+								<option selected>Right</option>
+								<option>Both</option>
+						</select>							
+					</div>
+					}
+					@if (Model.AffectedExtremity == "Both") {
+						<div class="controls">	
+							<select id="PatientAffectedExtremity3" name="PatientAffectedExtremity" required>
+								<option>Left</option>
+								<option>Right</option>
+								<option selected>Both</option>
+						</select>							
+					</div>
+					}
+					@if (Model.AffectedExtremity != "Left" && Model.AffectedExtremity != "Right" && Model.AffectedExtremity != "Both") {
+						<div class="controls">	
+							<select id="PatientAffectedExtremity4" name="PatientAffectedExtremity" required>
+								<option>Left</option>
+								<option>Right</option>
+								<option>Both</option>
+						</select>							
+					</div>
+					}
+				</div>
+					<div class="control-group">
+					<label class="control-label" for="PatientDeformity">
+						Deformity 
+					</label>
+					@if (Model.Deformity == "Valgus") {
+						<div class="controls">	
+								<select id="PatientDeformity1" name="PatientDeformity" required>
+									<option selected>Valgus</option>
+									<option>Varus</option>
+								</select>				
+						</div>
+					}
+					@if (Model.Deformity == "Varus") {
+						<div class="controls">	
+								<select id="PatientDeformity2" name="PatientDeformity" required>
+									<option>Valgus</option>
+									<option selected>Varus</option>
+								</select>				
+						</div>
+					}
+					@if (Model.Deformity != "Varus" && Model.Deformity != "Valgus") {
+						<div class="controls">	
+								<select id="PatientDeformity3" name="PatientDeformity" required>
+									<option>Valgus</option>
+									<option>Varus</option>
+								</select>				
+						</div>
+					}
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientID"></label>
+					<div class="controls">
+						@Html.HiddenFor(m => Model.ID, new { placeholder = @Model.ID})	
+					</div>
+				</div>
+
+			</div>
+
+			@if(ViewBag.UploadAlert != null)
+			{ 
+				<div class="alert fade in">
+					<button type="button" class="close" data-dismiss="alert">x</button>
+					@Html.Raw(ViewBag.UploadAlert)
+				</div>
+			}
+			<div class="modal-footer">
+				<span class="spinner" style="display: none;"><img src="/Content/img/ajax-loader.gif" /></span>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button type="submit" class="btn btn-primary">Save Changes</button>
+			</div>
+		</form>
+	</div>
+}
+
+@using(Html.BeginForm("EditContact", "Patient", FormMethod.Post, new {
+	enctype = "multipart/form-data", @class = "form-horizontal"
+}))
+{ 
+	<div id="editContactModal"
+		class="modal hide @Html.Raw(ViewBag.UploadAlert == null ? "fade" : "")"
+		tabindex="-1" role="dialog"
+		aria-labelledby="newPatientLabel" aria-hidden="true" >
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="editContactLabel">Edit Emergency Contact</h3>
+		</div>
+		<form class="form-horizontal" method="post" enctype="multipart/form-data">
+			<div class="modal-body">
+				<div class="control-group">
+					<label class="control-label" for="PatientContactName">
+						Contact Name
+					</label>
+					<div class="controls">
+						<input type="text" id="PatientContactName" name="PatientContactName"
+							value="@Html.DisplayFor(m => Model.ContactName, new { required ="true", @class = "ContactName" })" required />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientContactRelation">
+						Relationship to Patient
+					</label>
+					<div class="controls">	
+						<input type="text" id="PatientContactRelation" name="PatientContactRelation" 		
+							value="@Html.DisplayFor(m => Model.ContactRelation, new { required ="true", @class = "ContactRelation" })" required />							
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientContactPhoneNumber">
+						Phone Number
+					</label>
+					<div class="controls">
+						<input type="text" id="PatientContactPhoneNumber" name="PatientContactPhoneNumber"
+							value="@Html.DisplayFor(m => Model.ContactPhoneNumber, new { required ="true", @class = "ContactPhoneNumber" })" required />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientContactEmail">
+						Email
+					</label>
+					<div class="controls">
+						<input type="text" id="PatientContactEmail" name="PatientContactEmail"
+							value="@Html.DisplayFor(m => Model.ContactEmail, new { required ="true", @class = "ContactEmail" })" required />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientID"></label>
+					<div class="controls">
+						@Html.HiddenFor(m => Model.ID, new { placeholder = @Model.ID})	
+					</div>
+				</div>
+
+			</div>
+
+			@if(ViewBag.UploadAlert != null)
+			{ 
+				<div class="alert fade in">
+					<button type="button" class="close" data-dismiss="alert">x</button>
+					@Html.Raw(ViewBag.UploadAlert)
+				</div>
+			}
+			<div class="modal-footer">
+				<span class="spinner" style="display: none;"><img src="/Content/img/ajax-loader.gif" /></span>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button type="submit" class="btn btn-primary">Save Changes</button>
+			</div>
+		</form>
+	</div>
+}
+
+@using(Html.BeginForm("EditMedicalProfile", "Patient", FormMethod.Post, new {
+	enctype = "multipart/form-data", @class = "form-horizontal"
+}))
+{ 
+	<div id="editMedicalProfileModal"
+		class="modal hide @Html.Raw(ViewBag.UploadAlert == null ? "fade" : "")"
+		tabindex="-1" role="dialog"
+		aria-labelledby="newPatientLabel" aria-hidden="true" >
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="editMedicalprofileLabel">Edit Medical Profile</h3>
+		</div>
+		<form class="form-horizontal" method="post" enctype="multipart/form-data">
+			<div class="modal-body">
+				<div class="row">
+					<div class="control-group">
+						<label class="control-label" for="PatientCurrentMeds" style="margin-left: 30px;">
+							Current Medications:  
+						</label>
+						<div class="controls">
+							<textarea name="PatientCurrentMeds" style="margin-left: 30px;" rows="3"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="control-group">
+						<label class="control-label" for="PatientMedAllergies" style="margin-left: 30px;">
+							Medication Allergies:  
+						</label>
+						<div class="controls">
+							<textarea name="PatientMedAllergies" style="margin-left: 30px;" rows="3"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span1" style="margin-left: 220px;">Never</div>
+					<div class="span1">Current</div>
+					<div class="span1" style="margin-left: 50px;">Past</div>
+				</div>				
+				<div class="control-group">
+					<label class="control-label" for="PatientHeartDisease, PPatientHeartDisease">
+						Heart Disease:
+					</label>
+					<div class="controls">
+						<input type="checkbox" class="span1" />
+						<input type="checkbox" class="span2" id="PatientHeartDisease" name="PatientHeartDisease" value="Current" />
+						<input type="checkbox" class="span1" name="PPatientHeartDisease" value="Past" />
+					</div>										
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientDiabetes, PPatientDiabetes">
+						Diabetes:
+					</label>
+					<div class="controls">
+						<input type="checkbox" class="span1" />
+						<input type="checkbox" class="span2" name="PatientDiabetes" value="Current" />
+						<input type="checkbox" class="span1" name="PPatientDiabetes" value="Past" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientCancer, PPatientCancer">
+						Cancer: 
+					</label>
+					<div class="controls">
+						<input type="checkbox" class="span1" />
+						<input type="checkbox" class="span2" name="PatientCancer" value="Current" />
+						<input type="checkbox" class="span1" name="PPatientCancer" value="Past" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientHighBloodPressure, PPatientHighBloodPressure">
+						High Blood Pressure: 
+					</label>
+					<div class="controls">
+						<input type="checkbox" class="span1" />
+						<input type="checkbox" class="span2" name="PatientHighBloodPressure" value="Current" />
+						<input type="checkbox" class="span1" name="PPatientHighBloodPressure" value="Past" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientID"></label>
+					<div class="controls">
+						@Html.HiddenFor(m => Model.ID, new { placeholder = @Model.ID})	
+					</div>
+				</div>
+
+			</div>
+
+			@if(ViewBag.UploadAlert != null)
+			{ 
+				<div class="alert fade in">
+					<button type="button" class="close" data-dismiss="alert">x</button>
+					@Html.Raw(ViewBag.UploadAlert)
+				</div>
+			}
+			<div class="modal-footer">
+				<span class="spinner" style="display: none;"><img src="/Content/img/ajax-loader.gif" /></span>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button type="submit" class="btn btn-primary">Save Changes</button>
+			</div>
+		</form>
+	</div>
+}
+
+<!-- Html for Profile -->
+<div class="container">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="well">
+				<div class="span6" style="font-size: 31.5px;">
+					<strong>@Html.DisplayFor(m => Model.LastName, new { placeholder = @Model.LastName }), @Html.DisplayFor(m => Model.FirstName, new { placeholder = @Model.FirstName })</strong>
+				</div>
+				<div class="span1 offset4">
+					<div class="btn-group">
+						<a href="#" class="btn disabled" id="show-profile-btn"><strong>Profile</strong></a>
+						<a href="@Url.Action("Report", "Patient", new { id = Model.ID })"
+						class="btn btn-primary"><strong>Report</strong></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="accordion" id="accordion2">
+		<div class="accordion-group">
+			<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="accordion2" href="#collapseOne">
+					<i class="icon-chevron-up basicProfile" id="icon-element"></i> Basic Profile
+				</a>
+			</div>
+			<div id="collapseOne" class="accordion-body collapse in">
+				<div class="accordion-inner">
+					<div class="row">
+						<div class="span2" style="padding-bottom: 5px;">
+							<h4>Patient Photo</h4>
+
+							<div class="fileupload fileupload-new" data-provides="fileupload">
+									<img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&text=no+image" />
+							</div>
+
+@*							<div class="fileupload fileupload-exists" data-provides="fileupload">
+								<div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+									<img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&text=no+image" /></div>
+								<div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;">
+									<img src="http://jasny.github.com/bootstrap/assets/img/extended-by-jasny.png"></div>
+								<div>
+									<span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" /></span>
+									<a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+								</div>
+							</div>*@
+
+						</div>
+						@*</div>*@
+						<div class="span3 offset1">
+							<h4>General Information 
+								<a class="btn btn-primary btn-small"
+									href="#editPatientModal" data-toggle="modal" style="float: right;">Edit
+								</a>
+							</h4>
+							<table class="table table-striped table-bordered table-condensed" border="1">
+								<tbody>
+									<tr>
+										<td><strong>Started KOAALA:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.StartString, new { placeholder = @Model.StartString })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Age:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Age, new { placeholder = @Model.Age })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Birthday:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.BirthdayString, new { placeholder = @Model.BirthdayString })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Sex:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Gender, new { placeholder = @Model.Gender })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Height (inches):</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Height, new { placeholder = @Model.Height })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Weight (lbs):</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Weight, new { placeholder = @Model.Weight })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Therapist:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Therapist.RealName, new { placeholder = @Model.Therapist.RealName })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Physician:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Doctor, new { placeholder = @Model.Doctor })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Current City:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.City, new { placeholder = @Model.City })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Phone Number:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.PhoneNumber, new { placeholder = @Model.PhoneNumber })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Email:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Email, new { placeholder = @Model.Email })</strong></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="span4 offset1" style="padding-bottom: 5px;">
+							<h4>Arthritis Information 
+								<a class="btn btn-primary btn-small"
+									href="#editMedicalModal" data-toggle="modal" style="float: right;">Edit </a>
+							</h4>
+							<table class="table table-striped table-bordered table-condensed" border="1">
+								<tbody>
+									<tr>
+										<td><strong>Arthritis Type:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.ArthritisType, new { placeholder = @Model.ArthritisType })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Affected Extremity:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.AffectedExtremity, new { placeholder = @Model.AffectedExtremity })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Deformity:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Deformity, new { placeholder = @Model.Deformity })</strong></td>
+									</tr>
+								</tbody>
+							</table><br />
+							<h4>Emergency Contact <a class="btn btn-primary btn-small"
+								href="#editContactModal" data-toggle="modal" style="float: right;">Edit
+							</a></h4>
+							<table class="table table-striped table-bordered table-condensed" border="1">
+								<tbody>
+									<tr>
+										<td><strong>Contact Name:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.ContactName, new { placeholder = @Model.ContactName })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Relationship:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.ContactRelation, new { placeholder = @Model.ContactRelation })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Phone Number:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.ContactPhoneNumber, new { placeholder = @Model.ContactPhoneNumber })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Email:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.ContactEmail, new { placeholder = @Model.ContactEmail })</strong></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="accordion2" href="#collapseTwo">
+						<i class="icon-chevron-down medicalProfile"></i>  Medical Profile
+					</a>
+				</div>
+				<div id="collapseTwo" class="accordion-body collapse">
+					<div class="accordion-inner">
+						<h4>Current Medications
+					<a class="btn btn-primary btn-small" id="edit" 
+						href="#editMedicalProfileModal" data-toggle="modal" style="float: right;">Edit </a>
+						</h4>
+						<p>							
+@*							@Html.DisplayFor(m => Model.MedProfile.CurrentMeds, new { placeholder = @Model.MedProfile.CurrentMeds[0] })*@
+						</p>
+						<br />
+						<h4>Medications Which Have Caused an Allergic Reaction</h4>
+						<ul>
+							<li>Medication1</li>
+							<li>Medication2</li>
+							<li>Medication3</li>
+						</ul>
+						<br />
+						<h4>Current Conditions</h4>
+						<ul>
+							@if (Model.MedProfile.HeartDisease == true) { <li>Heart Disease</li> }
+							@if (Model.MedProfile.Diabetes == true) { <li>Diabetes</li> }
+							@if (Model.MedProfile.Cancer == true) { <li>Cancer</li> }
+							@if (Model.MedProfile.HighBloodPressure == true) { <li>High Blood Pressure</li> }
+						</ul>
+						<br />
+						<h4>Past Conditions</h4>
+						<ul>
+							@if (Model.MedProfile.PHeartDisease == true) { <li>Heart Disease</li> }
+							@if (Model.MedProfile.PDiabetes == true) { <li>Diabetes</li> }
+							@if (Model.MedProfile.PCancer == true) { <li>Cancer</li> }
+							@if (Model.MedProfile.PHighBloodPressure == true) { <li>High Blood Pressure</li> }
+						</ul>
+						<br />
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="row" style="font-size: 9px; color: #999; text-align: center;">
+		<div class="span12"></div>
+		<br />
+		The KOAALAClinic is a prototype system; Madonna Rehabilitation Hospital takes no liability for use of this software
+			| <a href="email:katerilett@gmail.com">Contact Us</a>
+		| © 2013 
+	</div>
+</div>
+
+
+
+

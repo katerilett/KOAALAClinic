@@ -1,0 +1,59 @@
+﻿@model LocomotionWebApp.Models.ViewModels.PatientListViewModel
+@{
+	Layout = null;
+}
+
+@if(Model.Patients.Count > 0)
+{ 
+	<thead>
+		<tr>
+			<th>Patient Name</th>
+			<th>Therapist</th>
+			<th>Physician</th> 
+			<th>Age</th>
+			<th>Sex</th> 
+			<th>Started KOAALA</th>
+			<th></th>
+		</tr>
+	</thead>
+	foreach(var patient in Model.Patients)
+	{ 
+		<tr>
+			<td>
+				<a href="@Url.Action("View", "Patient", new { id= patient.ID })"
+					style="color: black;">@Html.DisplayFor(net => patient.LastName) , 
+					@Html.DisplayFor(net => patient.FirstName)</a>	
+			</td>
+						
+			<td style="text-align: center;">@Html.DisplayFor(net => patient.Therapist.RealName)</td>
+			<td style="text-align: center;">@Html.DisplayFor(net => patient.Doctor)</td>
+			<td style="text-align: center;">@Html.DisplayFor(net => patient.Age)</td>
+			<td style="text-align: center;">@Html.DisplayFor(net => patient.Gender)</td>
+			<td style="text-align: center;">@Html.DisplayFor(net => patient.Start)</td>
+
+			<td style="text-align: right;">
+				<a href="@Url.Action("Report", "Patient", new { id = patient.ID })"
+					class="btn btn-small btn-primary">Report</a>
+				<a href="@Url.Action("View", "Patient", new { id= patient.ID })"
+					class="btn btn-small">Profile</a>				
+				<a href="@Url.Action("Delete", "Patient", new { id = patient.ID })"
+					class="btn btn-small btn-danger delete-net-btn"><i class="icon-trash"></i> </a>				
+			</td>
+		</tr>
+	}
+
+	<script type="text/javascript">
+		$(".delete-net-btn").click(function(e) {
+			console.log("CLICKC");
+			var netName = $(e.target).closest("tr").find("td").first().text();
+			if(confirm('Are you sure you wish to delete ' + netName + '?')) {
+				return true;
+			}
+			e.preventDefault();
+		});
+	</script>
+}
+else
+{
+	<td>There are no patients in the system</td>
+}

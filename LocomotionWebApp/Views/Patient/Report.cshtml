@@ -1,0 +1,1114 @@
+﻿@model LocomotionWebApp.Models.ViewModels.PatientViewModel
+
+
+@section Title
+{
+Report	
+}
+
+@section Header
+{
+	<div class="nav pull-right">
+		<a class="btn"
+			href="#addReport" data-toggle="modal">Upload File
+			<i class="icon-file"></i>
+		</a>
+	</div>
+}
+
+@section Scripts
+{
+	@if (ViewBag.UploadAlert != null)
+ {
+		<script type="text/javascript">
+			//var isFormValid = ;
+			$(function () {
+				$('#addReport').modal('show');
+			});
+		</script>
+ }
+
+	@if (ViewBag.UrlUploadAlert != null)
+ {
+		<script type="text/javascript">
+			//var isFormValid = ;
+			$(function () {
+				$('#editRequiredModal').modal('show');
+			});
+		</script>
+ }
+
+	<script type="text/javascript">
+		$(function () {
+			$("#uploadButton").add("#createNetUrlBtn")
+				.click(function (e) {
+					$(this).closest(".modal-footer").find(".spinner").show();
+					$(this).parent().find("button").addClass("disabled");
+					$(this).attr("type", "button");
+					$(this).unbind("click");
+					$(this).closest("form").submit();
+				}
+			);
+		});
+	</script>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#collapseOne').on('hide', function () {
+				$(".gaitDataTables").removeClass("icon-chevron-up").addClass("icon-chevron-down");
+			})
+			$('#collapseOne').on('show', function () {
+				$(".gaitDataTables").removeClass("icon-chevron-down").addClass("icon-chevron-up");
+			})
+			$('#collapseTwo').on('hide', function () {
+				$(".trends").removeClass("icon-chevron-up").addClass("icon-chevron-down");
+			})
+			$('#collapseTwo').on('show', function () {
+				$(".trends").removeClass("icon-chevron-down").addClass("icon-chevron-up");
+			})
+			$('#collapseThree').on('hide', function () {
+				$(".functionalTests").removeClass("icon-chevron-up").addClass("icon-chevron-down");
+			})
+			$('#collapseThree').on('show', function () {
+				$(".functionalTests").removeClass("icon-chevron-down").addClass("icon-chevron-up");
+			})
+			$('#collapseFour').on('hide', function () {
+				$(".activityBreakdown").removeClass("icon-chevron-up").addClass("icon-chevron-down");
+			})
+			$('#collapseFour').on('show', function () {
+				$(".activityBreakdown").removeClass("icon-chevron-down").addClass("icon-chevron-up");
+			})
+		});
+	</script>
+
+	<script type="text/javascript">
+		//Distance Walked Graph
+		$(function () {
+			$.getJSON("/Patient/FindDistance", function (data) {
+				// Create the chart
+				$('#container3').highcharts('StockChart', {
+					rangeSelector: {
+						buttons: [{
+							type: 'week',
+							count: 1,
+							text: '1w'
+						}, {
+							type: 'month',
+							count: 1,
+							text: '1m'
+						}, {
+							type: 'month',
+							count: 3,
+							text: '3m'
+						}, {
+							type: 'month',
+							count: 6,
+							text: '6m'
+						}, {
+							type: 'year',
+							count: 1,
+							text: '1y'
+						}, {
+							type: 'all',
+							text: 'All'
+						}],
+						selected: 1
+					},
+					yAxis: {
+						title: {
+							text: 'Distance (miles)'
+						},
+						plotLines: [{
+							value: 6.0000,
+							color: 'green',
+							dashStyle: 'shortdash',
+							width: 2,
+							label: {
+								text: 'Distance Goal'
+							}
+						}]
+					},
+					series: [{
+						name: 'Distance (miles)',
+						data: data,
+						id: 'dataseries',
+						marker: {
+							enabled: true,
+							radius: 3
+						},
+						shadow: true,
+						tooltip: {
+							valueDecimals: 2
+						},
+					},
+						// the event marker flags
+					{
+						type: 'flags',
+						data: [{
+							x: Date.UTC(2013, 3, 25),
+							title: '!',
+							text: 'Fall: 11:23 am'
+						}, {
+							x: Date.UTC(2013, 1, 2),
+							title: '!',
+							text: 'Fall: 6:54 pm'
+						}],
+						onSeries: 'dataseries',
+						shape: 'circlepin',
+						width: 16,
+						color: '#DA4F49',
+						fillColor: '#DA4F49',
+						style: {//text style
+							color: 'white'
+						}
+					}]
+				});
+			});
+		});
+
+		// Velocity graph
+		$(function () {
+			var seriesOptions = [],
+				yAxisOptions = [],
+				seriesCounter = 0,
+				colors = Highcharts.getOptions().colors;
+			$.getJSON("/Patient/FindMaxVelocity", function (data) {
+				seriesOptions[0] = {
+					name: 'Max Velocity',
+					data: data,
+					marker: {
+						enabled: true,
+						radius: 3
+					},
+					shadow: true
+				};
+				seriesCounter++;
+				if (seriesCounter == 2) {
+					createChart();
+				}
+			});
+			$.getJSON("/Patient/FindAverageVelocity", function (data) {
+				seriesOptions[1] = {
+					name: 'Avg. Velocity',
+					data: data,
+					marker: {
+						enabled: true,
+						radius: 3
+					},
+					shadow: true
+				};
+				seriesCounter++;
+
+				if (seriesCounter == 2) {
+					createChart();
+				}
+			});
+			// create the chart when all data is loaded
+			function createChart() {
+				$('#container9').highcharts('StockChart', {
+					chart: {},
+					rangeSelector: {
+						buttons: [{
+							type: 'week',
+							count: 1,
+							text: '1w'
+						}, {
+							type: 'month',
+							count: 1,
+							text: '1m'
+						}, {
+							type: 'month',
+							count: 3,
+							text: '3m'
+						}, {
+							type: 'month',
+							count: 6,
+							text: '6m'
+						}, {
+							type: 'year',
+							count: 1,
+							text: '1y'
+						}, {
+							type: 'all',
+							text: 'All'
+						}],
+						selected: 1
+					},
+					yAxis: {
+						labels: {
+							formatter: function () {
+								return this.value;
+							}
+						},
+						title: {
+							text: 'Velocity (mi/hr)'
+						},
+						plotLines: [{
+							value: 0,
+							width: 2,
+							color: 'silver'
+						}]
+					},
+					tooltip: {
+						pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}mi/hr</b><br/>',
+						valueDecimals: 2
+					},
+					legend: {
+						enabled: true
+					},
+					series: seriesOptions
+				});
+			}
+		});
+
+		//Number of steps graph
+		$(function () {
+			$.getJSON("/Patient/FindSteps", function (data) {
+				// create the chart
+				$('#container4').highcharts('StockChart', {
+					chart: {
+						alignTicks: false
+					},
+					rangeSelector: {
+						buttons: [{
+							type: 'week',
+							count: 1,
+							text: '1w'
+						}, {
+							type: 'month',
+							count: 1,
+							text: '1m'
+						}, {
+							type: 'month',
+							count: 3,
+							text: '3m'
+						}, {
+							type: 'month',
+							count: 6,
+							text: '6m'
+						}, {
+							type: 'year',
+							count: 1,
+							text: '1y'
+						}, {
+							type: 'all',
+							text: 'All'
+						}],
+						selected: 1
+					},
+					yAxis: {
+						plotLines: [{
+							value: 6000,
+							color: 'green',
+							dashStyle: 'shortdash',
+							width: 2,
+							label: {
+								text: 'Goal'
+							}
+						}]
+					},
+					series: [{
+						type: 'column',
+						name: 'Number of Steps',
+						data: data,
+						dataGrouping: {
+							units: [[
+								'week', // unit name
+								[1] // allowed multiples
+							], [
+								'month',
+								[1, 2, 3, 4, 6]
+							]]
+						},
+					}]
+				});
+			});
+		});
+
+		//Number of stair steps graph
+		$(function () {
+			$.getJSON("/Patient/FindStairSteps", function (data) {
+				// create the chart
+				$('#container6').highcharts('StockChart', {
+					chart: {
+						alignTicks: false
+					},
+					rangeSelector: {
+						buttons: [{
+							type: 'week',
+							count: 1,
+							text: '1w'
+						}, {
+							type: 'month',
+							count: 1,
+							text: '1m'
+						}, {
+							type: 'month',
+							count: 3,
+							text: '3m'
+						}, {
+							type: 'month',
+							count: 6,
+							text: '6m'
+						}, {
+							type: 'year',
+							count: 1,
+							text: '1y'
+						}, {
+							type: 'all',
+							text: 'All'
+						}],
+						selected: 1
+					},
+					series: [{
+						type: 'column',
+						name: 'Number of Steps',
+						data: data,
+						dataGrouping: {
+							units: [[
+								'week', // unit name
+								[1] // allowed multiples
+							], [
+								'month',
+								[1, 2, 3, 4, 6]
+							]]
+						}
+					}]
+				});
+			});
+		});
+
+		//Stance, Swing, and Single Limb Stance (% of GC)
+		$(function () {
+			var seriesOptions = [],
+				yAxisOptions = [],
+				seriesCounter = 0,
+				colors = Highcharts.getOptions().colors;
+			$.getJSON("/Patient/FindStancePercent", function (data) {
+				seriesOptions[0] = {
+					name: 'Stance',
+					data: data,
+					marker: {
+						enabled: true,
+						radius: 3
+					},
+					shadow: true
+				};
+				seriesCounter++;
+
+				if (seriesCounter == 3) {
+					createChart();
+				}
+
+			});
+			$.getJSON("/Patient/FindSwingPercent", function (data) {
+
+				seriesOptions[1] = {
+					name: 'Swing',
+					data: data,
+					marker: {
+						enabled: true,
+						radius: 3
+					},
+					shadow: true
+				};
+				seriesCounter++;
+
+				if (seriesCounter == 3) {
+					createChart();
+				}
+			});
+			$.getJSON("/Patient/FindSinglePercent", function (data) {
+
+				seriesOptions[2] = {
+					name: 'Single Limb',
+					data: data,
+					marker: {
+						enabled: true,
+						radius: 3
+					},
+					shadow: true
+				};
+				seriesCounter++;
+
+				if (seriesCounter == 3) {
+					createChart();
+				}
+			});
+			// create the chart when all data is loaded
+			function createChart() {
+				$('#container5').highcharts('StockChart', {
+					chart: {},
+					rangeSelector: {
+						buttons: [{
+							type: 'week',
+							count: 1,
+							text: '1w'
+						}, {
+							type: 'month',
+							count: 1,
+							text: '1m'
+						}, {
+							type: 'month',
+							count: 3,
+							text: '3m'
+						}, {
+							type: 'month',
+							count: 6,
+							text: '6m'
+						}, {
+							type: 'year',
+							count: 1,
+							text: '1y'
+						}, {
+							type: 'all',
+							text: 'All'
+						}],
+						selected: 1
+					},
+					yAxis: {
+						labels: {
+							formatter: function () {
+								return this.value + '%';
+							}
+						},
+						plotLines: [{
+							value: 0,
+							width: 2,
+							color: 'silver'
+						}]
+					},
+					tooltip: {
+						pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}%</b><br/>',
+						valueDecimals: 2
+					},
+					legend: {
+						enabled: true,
+					},
+					series: seriesOptions
+				});
+			}
+		});
+
+		//Distance walked graph (2MWT)
+		$(function () {
+			$.getJSON("/Patient/FindWalkTestDistance" , function (data) {
+			//$.getJSON('http://www.highcharts.com/samples/data/jsonp.php?filename=aapl-c.json&callback=?', function (data) {
+				// Create the chart
+				$('#container7').highcharts('StockChart', {
+					rangeSelector: {
+						buttons: [{
+							type: 'week',
+							count: 1,
+							text: '1w'
+						}, {
+							type: 'month',
+							count: 1,
+							text: '1m'
+						}, {
+							type: 'month',
+							count: 3,
+							text: '3m'
+						}, {
+							type: 'month',
+							count: 6,
+							text: '6m'
+						}, {
+							type: 'year',
+							count: 1,
+							text: '1y'
+						}, {
+							type: 'all',
+							text: 'All'
+						}],
+						selected: 1
+					},
+					yAxis: {
+						title: {
+							text: 'Distance (m)'
+						},
+					},
+					series: [{
+						name: 'Distance (m)',
+						data: data,
+						marker: {
+							enabled: true,
+							radius: 3
+						},
+						shadow: true,
+						tooltip: {
+							valueDecimals: 2
+						}
+					}]
+				});
+			});
+		});
+
+		//Stride length
+		$(function () {
+			$.getJSON("/Patient/FindStrideLength", function (data) {
+				//$.getJSON('http://www.highcharts.com/samples/data/jsonp.php?filename=aapl-c.json&callback=?', function (data) {
+				// Create the chart
+				$('#container10').highcharts('StockChart', {
+					rangeSelector: {
+						buttons: [{
+							type: 'week',
+							count: 1,
+							text: '1w'
+						}, {
+							type: 'month',
+							count: 1,
+							text: '1m'
+						}, {
+							type: 'month',
+							count: 3,
+							text: '3m'
+						}, {
+							type: 'month',
+							count: 6,
+							text: '6m'
+						}, {
+							type: 'year',
+							count: 1,
+							text: '1y'
+						}, {
+							type: 'all',
+							text: 'All'
+						}],
+						selected: 1
+					},
+					yAxis: {
+						plotBands: [{
+							from: 125,
+							to: 135,
+							color: '#BCF5BC',
+						}]
+					},
+					series: [{
+						name: 'Distance (m)',
+						data: data,
+						marker: {
+							enabled: true,
+							radius: 3
+						},
+						shadow: true,
+						tooltip: {
+							valueDecimals: 2
+						}
+					}]
+				});
+			});
+		});
+
+		//Stride and Step Length
+		$(function () {
+			var seriesOptions = [],
+				yAxisOptions = [],
+				seriesCounter = 0,
+				colors = Highcharts.getOptions().colors;
+			$.getJSON("/Patient/FindStrideLength", function (data) {
+				seriesOptions[0] = {
+					name: 'Stride',
+					data: data,
+					marker: {
+						enabled: true,
+						radius: 3
+					},
+					shadow: true
+				};
+				seriesCounter++;
+
+				if (seriesCounter == 2) {
+					createChart();
+				}
+
+			});
+			$.getJSON("/Patient/FindStepLength", function (data) {
+
+				seriesOptions[1] = {
+					name: 'Step',
+					data: data,
+					marker: {
+						enabled: true,
+						radius: 3
+					},
+					shadow: true
+				};
+				seriesCounter++;
+
+				if (seriesCounter == 2) {
+					createChart();
+				}
+			});
+			// create the chart when all data is loaded
+			function createChart() {
+				$('#container8').highcharts('StockChart', {
+					chart: {},
+					rangeSelector: {
+						buttons: [{
+							type: 'week',
+							count: 1,
+							text: '1w'
+						}, {
+							type: 'month',
+							count: 1,
+							text: '1m'
+						}, {
+							type: 'month',
+							count: 3,
+							text: '3m'
+						}, {
+							type: 'month',
+							count: 6,
+							text: '6m'
+						}, {
+							type: 'year',
+							count: 1,
+							text: '1y'
+						}, {
+							type: 'all',
+							text: 'All'
+						}],
+						selected: 1
+					},
+					yAxis: {
+						labels: {
+							formatter: function () {
+								return this.value;
+							}
+						},
+						plotBands: [{
+							from: 58,
+							to: 75,
+							color: '#BCF5BC',
+						}, {
+							from: 120,
+							to: 135,
+							color: '#BCF5BC'
+						}],
+						plotLines: [{
+							value: 0,
+							width: 2,
+							color: 'silver'
+						},]
+					},
+					tooltip: {
+						pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}cm</b><br/>',
+						valueDecimals: 2
+					},
+					legend: {
+						enabled: true
+					},
+					series: seriesOptions
+				});
+			}
+		});
+	</script>
+}
+<!--Modals-->
+@using (Html.BeginForm("Upload", "Patient", FormMethod.Post, new
+{
+	enctype = "multipart/form-data",
+	@class = "form-horizontal"
+}))
+{ 
+	<div id="addReport"
+		class="modal hide @Html.Raw(ViewBag.UploadAlert == null ? "fade" : "")"
+		tabindex="-1" role="dialog"
+		aria-labelledby="newPatientLabel" aria-hidden="true" >
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="newPatientLabel">Upload File</h3>
+		</div>
+		<form class="form-horizontal" method="post" enctype="multipart/form-data">
+			<div class="modal-body">
+
+				<div class="control-group">
+					<label class="control-label" for="PatientFile">
+						<b>Patient File</b>
+					</label>
+					<div class="controls">
+						<input type="file" id="PatientFile" name="PatientFile" /><br />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientID"></label>
+					<div class="controls">
+						@Html.HiddenFor(m => Model.ID, new { placeholder = @Model.ID })
+					</div>
+				</div>
+			</div>
+
+			@if (ViewBag.UploadAlert != null)
+   { 
+				<div class="alert fade in">
+					<button type="button" class="close" data-dismiss="alert">x</button>
+					@Html.Raw(ViewBag.UploadAlert)
+				</div>
+   }
+			<div class="modal-footer">
+				<span class="spinner" style="display: none;">
+					<img src="/Content/img/ajax-loader.gif" /></span>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button type="submit" id="uploadButton" class="btn btn-primary">Submit</button>
+			</div>
+		</form>
+	</div>
+}
+@using (Html.BeginForm("EditRequired", "Patient", FormMethod.Post, new
+{
+	enctype = "multipart/form-data",
+	@class = "form-horizontal"
+}))
+{ 
+	<div id="editRequiredModal"
+		class="modal hide @Html.Raw(ViewBag.UploadAlert == null ? "fade" : "")"
+		tabindex="-1" role="dialog"
+		aria-labelledby="newPatientLabel" aria-hidden="true" >
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="editRequiredLabel">Edit Required Inputs</h3>
+		</div>
+		<form class="form-horizontal" method="post" enctype="multipart/form-data">
+			<div class="modal-body">
+				<div class="control-group">
+					<label class="control-label" for="PatientShanklength">
+						Shank Length (cm)
+					</label>
+					<div class="controls">
+						<input type="text" id="PatientShankLength" name="PatientShankLength" 		
+							value="@Html.DisplayFor(m => Model.ShankLength, new { required = "true", @class = "ShankLength" })" required />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientThighLength">
+						Thigh Length (cm)
+					</label>
+					<div class="controls">
+						<input type="text" id="PatientThighLength" name="PatientThighlength" 		
+							value="@Html.DisplayFor(m => Model.ThighLength, new { required = "true", @class = "ThighLength" })"  required />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="PatientID"></label>
+					<div class="controls">
+						@Html.HiddenFor(m => Model.ID, new { placeholder = @Model.ID })
+					</div>
+				</div>
+			</div>
+
+			@if (ViewBag.UploadAlert != null)
+   { 
+				<div class="alert fade in">
+					<button type="button" class="close" data-dismiss="alert">x</button>
+					@Html.Raw(ViewBag.UploadAlert)
+				</div>
+   }
+			<div class="modal-footer">
+				<span class="spinner" style="display: none;">
+					<img src="/Content/img/ajax-loader.gif" /></span>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button type="submit" class="btn btn-primary">Save Changes</button>
+			</div>
+		</form>
+	</div>
+}
+<!-- Html for Report -->
+<div class="container">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="well">
+				<div class="span6" style="font-size: 31.5px;">
+					<strong>@Html.DisplayFor(m => Model.LastName, new { placeholder = @Model.LastName }), 
+						@Html.DisplayFor(m => Model.FirstName, new { placeholder = @Model.FirstName })</strong>
+				</div>
+				<div class="span1 offset4">
+					<div class="btn-group">
+						<a href="@Url.Action("View", "Patient", new { id = Model.ID })"
+						class="btn btn-primary"><strong>Profile</strong></a>
+						<a href="#" class="btn disabled" id="show-report-btn"><strong>Report</strong></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="accordion" id="accordion2">
+		<div class="accordion-group">
+			<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="accordion2" href="#collapseOne">
+					<i class="icon-chevron-up gaitDataTables" id="icon-element"></i>Activity Breakdown
+				</a>
+			</div>
+			<div id="collapseOne" class="accordion-body collapse in">
+				<div class="accordion-inner">
+					<div class="row">
+						<div class="span3" style="padding-bottom: 5px; margin-left: 60px;">
+							<h4>Brace Information</h4>
+							<table class="table table-striped table-bordered table-condensed" border="1">
+								<tbody>
+									<tr class="success">
+										<td><strong>Brace Working</strong></td>
+										<td><strong>Yes</strong></td>
+									</tr>
+								</tbody>
+							</table>
+							<br />
+							<h4>Time Worn </h4>
+							<div style="height: 200px; overflow: auto;">
+								<table class="table table-striped table-bordered table-condensed" border="1">
+									<thead>
+										<tr>
+											<td><strong>Date</strong></td>
+											<td><strong>Hours Active</strong></td>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><strong>7/15/2013</strong></td>
+											<td><strong>4.2</strong></td>
+										</tr>
+										<tr>
+											<td><strong>7/14/2013</strong></td>
+											<td><strong>5.1</strong></td>
+										</tr>
+										<tr>
+											<td><strong>7/13/2013</strong></td>
+											<td><strong>6.3</strong></td>
+										</tr>
+										<tr>
+											<td><strong>7/12/2013</strong></td>
+											<td><strong>1.4</strong></td>
+										</tr>
+										<tr>
+											<td><strong>7/11/2013</strong></td>
+											<td><strong>3.5</strong></td>
+										</tr>
+										<tr>
+											<td><strong>7/10/2013</strong></td>
+											<td><strong>5.5</strong></td>
+										</tr>
+										<tr>
+											<td><strong>7/9/2013</strong></td>
+											<td><strong>6.6</strong></td>
+										</tr>
+										<tr>
+											<td><strong>7/8/2013</strong></td>
+											<td><strong>5.6</strong></td>
+										</tr>
+										<tr>
+											<td><strong>7/7/2013</strong></td>
+											<td><strong>6.2</strong></td>
+										</tr>
+										<tr>
+											<td><strong>7/6/2013</strong></td>
+											<td><strong>5.9</strong></td>
+										</tr>
+										<tr>
+											<td><strong>7/5/2013</strong></td>
+											<td><strong>6.7</strong></td>
+										</tr>
+										<tr>
+											<td><strong>7/4/2013</strong></td>
+											<td><strong>2.8</strong></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="span8">
+							<h4 style="padding-left: 10px;">Number of Steps</h4>
+							<div id="container4" style="height: 400px; padding-bottom: 5px;"></div>
+						</div>
+					</div>
+					<div class="row" style="margin-top: 10px;">
+						<div class="span6">
+							<h4 style="padding-left: 25px;">Distance Walked</h4>
+							<div id="container3" style="height: 400px; min-width: 600px;"></div>
+						</div>
+						<div class="span5">
+							<h4 style="padding-left: 10px;">Number of Stair Steps</h4>
+							<div id="container6" style="height: 400px; min-width: 500px; padding-bottom: 5px;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="accordion-group">
+			<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="accordion2" href="#collapseFour">
+					<i class="icon-chevron-down activityBreakdown"></i>Gait Data
+				</a>
+			</div>
+			<div id="collapseFour" class="accordion-body collapse">
+				<div class="accordion-inner">
+					<div class="row">
+						<div class="span6">
+							<h4 style="padding-left: 25px;">Max and Average Velocity</h4>
+							<div id="container9" style="height: 400px; min-width: 600px;"></div>
+						</div>
+						<div class="span5">
+							<h4 style="padding-left: 10px;">Stride Length</h4>
+							<div id="container10" style="height: 363px; min-width: 500px;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="accordion-group">
+			<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="accordion2" href="#collapseThree">
+					<i class="icon-chevron-down functionalTests"></i>Two Minute Walk Test
+				</a>
+			</div>
+			<div id="collapseThree" class="accordion-body collapse">
+				<div class="accordion-inner">
+					<div class="row">
+						<div class="span6">
+							<h4 style="padding-left: 25px;">Distance Walked</h4>
+							<div id="container7" style="height: 363px; min-width: 600px"></div>
+						</div>
+						<div class="span5">
+							<h4 style="padding-left: 10px;">Stride and Step Lengths</h4>
+							<div id="container8" style="height: 400px; min-width: 500px;"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span11">
+							<h4 style="padding-left: 10px;">Swing, Stance, and Single Limb Stance (% of GC)</h4>
+							<div id="container5" style="height: 400px; min-width: 600px;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="accordion-group">
+			<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="accordion2" href="#collapseTwo">
+					<i class="icon-chevron-down trends"></i>Original Data Tables
+				</a>
+			</div>
+			<div id="collapseTwo" class="accordion-body collapse">
+				<div class="accordion-inner">
+					<div class="btn-group">
+						<button class="btn btn-small">d</button>
+						<button class="btn disabled btn-small">wk</button>
+						<button class="btn btn-small">mo</button>
+						<button class="btn btn-small">3mo</button>
+						<button class="btn btn-small">6mo</button>
+						<button class="btn btn-small">yr</button>
+					</div>
+					<div class="row">
+						<br />
+						<div class="span4" style="padding-bottom: 5px;">
+							<h4>Gait Data</h4>
+							<table class="table table-striped table-bordered table-condensed" border="1">
+								<tbody>
+									<tr>
+										<td><strong>Average Gait Speed (meters/min)</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Report.AverageGaitSpeed, new { placeholder = @Model.Report.AverageGaitSpeed })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Candence (steps/min)</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Report.Candence, new { placeholder = @Model.Report.Candence })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Stride Length (cm)</strong></td>
+										<td><i class="icon-minus"></i></td>
+									</tr>
+									<tr>
+										<td><strong>Step Length (cm)</strong></td>
+										<td><i class="icon-minus"></i></td>
+									</tr>
+								</tbody>
+							</table>
+							<br />
+							<h4>Limb Values</h4>
+							<table class="table table-striped table-bordered table-condensed" border="1">
+								<thead>
+									<tr>
+										<td></td>
+										<td><strong>Left</strong></td>
+										<td><strong>Right</strong></td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><strong>Number of Strides</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Report.LStrideNumber, new { placeholder = @Model.Report.LStrideNumber })</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Report.RStrideNumber, new { placeholder = @Model.Report.RStrideNumber })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Stride Length (cm)</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Report.LeftStrideLength, new { placeholder = @Model.Report.LeftStrideLength })</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Report.RightStrideLength, new { placeholder = @Model.Report.RightStrideLength })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Stance</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Report.LStancePercent, new { placeholder = @Model.Report.LStancePercent }) %</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Report.RStancePercent, new { placeholder = @Model.Report.RStancePercent }) %</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Swing</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Report.LSwingPercent, new { placeholder = @Model.Report.LSwingPercent }) %</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Report.RSwingPercent, new { placeholder = @Model.Report.RSwingPercent }) %</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Single Limb Stance</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Report.LSingleLimbStancePercent, new { placeholder = @Model.Report.LSingleLimbStancePercent }) %</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.Report.RSingleLimbStancePercent, new { placeholder = @Model.Report.RSingleLimbStancePercent }) %</strong></td>
+									</tr>
+								</tbody>
+							</table>
+							<br />
+						</div>
+						<div class="span4 offset1">	
+							<h4>Required Inputs 
+								<a class="btn btn-primary btn-small"
+									href="#editRequiredModal" data-toggle="modal" style="float: right;">Edit
+								</a>
+							</h4>
+							<table class="table table-striped table-bordered table-condensed" border="1">
+								<tbody>
+									<tr>
+										<td><strong>Shank length (cm)
+											<a href="#" rel="tooltip" title="How to measure shank length: place instructions here"><i class="icon-question-sign"></i></a>
+										</strong></td>
+										@if (Model.ShankLength != 0)
+										{
+											<td><strong>@Html.DisplayFor(m => Model.ShankLength, new { placeholder = @Model.ShankLength })</strong></td>
+										}
+										@if (Model.ShankLength == 0)
+										{
+											<td><i class="icon-minus"></i></td>
+										}
+									</tr>
+									<tr>
+										<td><strong>Thigh length (cm)
+											<a href="#" rel="tooltip" title="How to measure thigh length: place instructions here"><i class="icon-question-sign"></i></a>
+										</strong></td>
+										@if (Model.ThighLength != 0)
+										{
+											<td><strong>@Html.DisplayFor(m => Model.ThighLength, new { placeholder = @Model.ThighLength })</strong></td>
+										}
+										@if (Model.ThighLength == 0)
+										{
+											<td><i class="icon-minus"></i></td>
+										}
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row" style="font-size: 9px; color: #999; text-align: center;">
+		<div class="span12"></div>
+		<br />
+		The KOAALAClinic is a prototype; Madonna Rehabilitation Hospital takes no liability for use of this software
+			| <a href="email:katerilett@gmail.com">Contact Us</a>
+		| © 2013 
+	</div>
+</div>
+
