@@ -22,7 +22,11 @@
 			<td>
 				<a href="@Url.Action("View", "Patient", new { id= patient.ID })"
 					style="color: black;">@Html.DisplayFor(net => patient.LastName) , 
-					@Html.DisplayFor(net => patient.FirstName)</a>	
+					@Html.DisplayFor(net => patient.FirstName)</a>
+				@if (patient.Age >= 75) 
+				{
+					<i class="icon-exclamation-sign"></i>	
+				}
 			</td>
 						
 			<td style="text-align: center;">@Html.DisplayFor(net => patient.Therapist.RealName)</td>
