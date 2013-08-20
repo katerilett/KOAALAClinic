@@ -197,6 +197,7 @@
     <Content Include="Content\images\sort_both.png" />
     <Content Include="Content\images\sort_desc.png" />
     <Content Include="Content\images\sort_desc_disabled.png" />
+    <Content Include="Content\input\steps.txt" />
     <Content Include="Content\js\adapters\mootools-adapter.js" />
     <Content Include="Content\js\adapters\mootools-adapter.src.js" />
     <Content Include="Content\js\adapters\prototype-adapter.js" />
@@ -235,7 +236,6 @@
     <Content Include="Content\js\highstock.src.js" />
     <Content Include="Content\js\themes\skies.js" />
     <Content Include="Global.asax" />
-    <Content Include="Views\Patient\data.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

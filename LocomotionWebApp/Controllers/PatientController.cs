@@ -817,7 +817,8 @@ namespace LocomotionWebApp.Controllers
 		public JsonResult FindSteps()
 		{
 			List<long[]> data = new List<long[]>();
-			StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\steps.txt");
+			//StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\steps.txt");
+			StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\KOAALAClinic\\LocomotionWebApp\\Content\\input\\steps.txt");
 			string line;
 			char[] delimiterChars = { ',', '[', ']' };
 
