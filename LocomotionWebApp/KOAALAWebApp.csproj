@@ -59,7 +59,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SolverSDKPlugIn">
       <HintPath>..\libraries\SolverSDKPlugIn.dll</HintPath>
@@ -241,9 +241,11 @@
     </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
@@ -293,6 +295,13 @@
     <Content Include="Views\Example html\HighCharts.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Config\connectionStrings.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Config\productionConnectionStrings.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ConnectionStrings.config" />
     <None Include="Properties\PublishProfiles\locomotion - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\locomotion - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\locomotion - Web Deploy %282%29.pubxml" />

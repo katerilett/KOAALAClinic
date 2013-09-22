@@ -785,6 +785,7 @@ namespace LocomotionWebApp.Controllers
 		//}
 		#endregion
 
+		//Uncomment later
 		//[Authorize]
 		//public ActionResult SaveNetwork(NetworkViewModel model)
 		//{
@@ -814,238 +815,239 @@ namespace LocomotionWebApp.Controllers
 		//	return TempEdit(model.ID, 0);
 		//}
 
-		public JsonResult FindSteps()
-		{
-			List<long[]> data = new List<long[]>();
-			//StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\steps.txt");
-			StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\KOAALAClinic\\LocomotionWebApp\\Content\\input\\steps.txt");
-			string line;
-			char[] delimiterChars = { ',', '[', ']' };
+		
+		//public JsonResult FindSteps()
+		//{
+		//	List<long[]> data = new List<long[]>();
+		//	//StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\steps.txt");
+		//	StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\KOAALAClinic\\LocomotionWebApp\\Content\\input\\steps.txt");
+		//	string line;
+		//	char[] delimiterChars = { ',', '[', ']' };
 
-			while ((line = reader.ReadLine()) != null)
-			{
-				string[] stringInput = line.Split(delimiterChars);
-				long[] array = new long[2];
-				array[0] = (long)Convert.ToDouble(stringInput[1]);
-				array[1] = (long)Convert.ToDouble(stringInput[2]);
-				data.Add(array);				
-			}
+		//	while ((line = reader.ReadLine()) != null)
+		//	{
+		//		string[] stringInput = line.Split(delimiterChars);
+		//		long[] array = new long[2];
+		//		array[0] = (long)Convert.ToDouble(stringInput[1]);
+		//		array[1] = (long)Convert.ToDouble(stringInput[2]);
+		//		data.Add(array);				
+		//	}
 
-			reader.Close();
-			var jsonData = Json(data, JsonRequestBehavior.AllowGet);
-			return (jsonData);
+		//	reader.Close();
+		//	var jsonData = Json(data, JsonRequestBehavior.AllowGet);
+		//	return (jsonData);
 			
-		}
+		//}
 
-		public JsonResult FindDistance()
-		{
-			List<float[]> data = new List<float[]>();
-			StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\distance1.txt");
-			string line;
-			char[] delimiterChars = { ',', '[', ']' };
+		//public JsonResult FindDistance()
+		//{
+		//	List<float[]> data = new List<float[]>();
+		//	StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\distance1.txt");
+		//	string line;
+		//	char[] delimiterChars = { ',', '[', ']' };
 
-			while ((line = reader.ReadLine()) != null)
-			{
-				string[] stringInput = line.Split(delimiterChars);
-				float[] array = new float[2];
-				array[0] = (float)Convert.ToDouble(stringInput[1]);
-				array[1] = (float)Convert.ToDouble(stringInput[2]);
-				data.Add(array);
-			}
+		//	while ((line = reader.ReadLine()) != null)
+		//	{
+		//		string[] stringInput = line.Split(delimiterChars);
+		//		float[] array = new float[2];
+		//		array[0] = (float)Convert.ToDouble(stringInput[1]);
+		//		array[1] = (float)Convert.ToDouble(stringInput[2]);
+		//		data.Add(array);
+		//	}
 
-			reader.Close();
-			var jsonData = Json(data, JsonRequestBehavior.AllowGet);
-			return (jsonData);
-		}
+		//	reader.Close();
+		//	var jsonData = Json(data, JsonRequestBehavior.AllowGet);
+		//	return (jsonData);
+		//}
 
-		public JsonResult FindWalkTestDistance()
-		{
-			List<float[]> data = new List<float[]>();
-			StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\distance2.txt");
-			string line;
-			char[] delimiterChars = { ',', '[', ']' };
+		//public JsonResult FindWalkTestDistance()
+		//{
+		//	List<float[]> data = new List<float[]>();
+		//	StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\distance2.txt");
+		//	string line;
+		//	char[] delimiterChars = { ',', '[', ']' };
 
-			while ((line = reader.ReadLine()) != null)
-			{
-				string[] stringInput = line.Split(delimiterChars);
-				float[] array = new float[2];
-				array[0] = (float)Convert.ToDouble(stringInput[1]);
-				array[1] = (float)Convert.ToDouble(stringInput[2]);
-				data.Add(array);
-			}
+		//	while ((line = reader.ReadLine()) != null)
+		//	{
+		//		string[] stringInput = line.Split(delimiterChars);
+		//		float[] array = new float[2];
+		//		array[0] = (float)Convert.ToDouble(stringInput[1]);
+		//		array[1] = (float)Convert.ToDouble(stringInput[2]);
+		//		data.Add(array);
+		//	}
 
-			reader.Close();
-			var jsonData = Json(data, JsonRequestBehavior.AllowGet);
-			return (jsonData);
-		}
+		//	reader.Close();
+		//	var jsonData = Json(data, JsonRequestBehavior.AllowGet);
+		//	return (jsonData);
+		//}
 
-		public JsonResult FindStairSteps()
-		{
-			List<long[]> data = new List<long[]>();
-			StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\stairsteps.txt");
-			string line;
-			char[] delimiterChars = { ',', '[', ']' };
+		//public JsonResult FindStairSteps()
+		//{
+		//	List<long[]> data = new List<long[]>();
+		//	StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\stairsteps.txt");
+		//	string line;
+		//	char[] delimiterChars = { ',', '[', ']' };
 
-			while ((line = reader.ReadLine()) != null)
-			{
-				string[] stringInput = line.Split(delimiterChars);
-				long[] array = new long[2];
-				array[0] = (long)Convert.ToDouble(stringInput[1]);
-				array[1] = (long)Convert.ToDouble(stringInput[2]);
-				data.Add(array);
-			}
+		//	while ((line = reader.ReadLine()) != null)
+		//	{
+		//		string[] stringInput = line.Split(delimiterChars);
+		//		long[] array = new long[2];
+		//		array[0] = (long)Convert.ToDouble(stringInput[1]);
+		//		array[1] = (long)Convert.ToDouble(stringInput[2]);
+		//		data.Add(array);
+		//	}
 
-			reader.Close();
-			var jsonData = Json(data, JsonRequestBehavior.AllowGet);
-			return (jsonData);
-		}
+		//	reader.Close();
+		//	var jsonData = Json(data, JsonRequestBehavior.AllowGet);
+		//	return (jsonData);
+		//}
 
-		public JsonResult FindMaxVelocity()
-		{
-			List<float[]> data = new List<float[]>();
-			StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\maxvelocity.txt");
-			string line;
-			char[] delimiterChars = { ',', '[', ']' };
+		//public JsonResult FindMaxVelocity()
+		//{
+		//	List<float[]> data = new List<float[]>();
+		//	StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\maxvelocity.txt");
+		//	string line;
+		//	char[] delimiterChars = { ',', '[', ']' };
 
-			while ((line = reader.ReadLine()) != null)
-			{
-				string[] stringInput = line.Split(delimiterChars);
-				float[] array = new float[2];
-				array[0] = (float)Convert.ToDouble(stringInput[1]);
-				array[1] = (float)Convert.ToDouble(stringInput[2]);
-				data.Add(array);
-			}
+		//	while ((line = reader.ReadLine()) != null)
+		//	{
+		//		string[] stringInput = line.Split(delimiterChars);
+		//		float[] array = new float[2];
+		//		array[0] = (float)Convert.ToDouble(stringInput[1]);
+		//		array[1] = (float)Convert.ToDouble(stringInput[2]);
+		//		data.Add(array);
+		//	}
 
-			reader.Close();
-			var jsonData = Json(data, JsonRequestBehavior.AllowGet);
-			return (jsonData);
-		}
+		//	reader.Close();
+		//	var jsonData = Json(data, JsonRequestBehavior.AllowGet);
+		//	return (jsonData);
+		//}
 
-		public JsonResult FindAverageVelocity()
-		{
-			List<float[]> data = new List<float[]>();
-			StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\avgvelocity.txt");
-			string line;
-			char[] delimiterChars = { ',', '[', ']' };
+		//public JsonResult FindAverageVelocity()
+		//{
+		//	List<float[]> data = new List<float[]>();
+		//	StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\avgvelocity.txt");
+		//	string line;
+		//	char[] delimiterChars = { ',', '[', ']' };
 
-			while ((line = reader.ReadLine()) != null)
-			{
-				string[] stringInput = line.Split(delimiterChars);
-				float[] array = new float[2];
-				array[0] = (float)Convert.ToDouble(stringInput[1]);
-				array[1] = (float)Convert.ToDouble(stringInput[2]);
-				data.Add(array);
-			}
+		//	while ((line = reader.ReadLine()) != null)
+		//	{
+		//		string[] stringInput = line.Split(delimiterChars);
+		//		float[] array = new float[2];
+		//		array[0] = (float)Convert.ToDouble(stringInput[1]);
+		//		array[1] = (float)Convert.ToDouble(stringInput[2]);
+		//		data.Add(array);
+		//	}
 
-			reader.Close();
-			var jsonData = Json(data, JsonRequestBehavior.AllowGet);
-			return (jsonData);
-		}
+		//	reader.Close();
+		//	var jsonData = Json(data, JsonRequestBehavior.AllowGet);
+		//	return (jsonData);
+		//}
 
-		public JsonResult FindStancePercent()
-		{
-			List<float[]> data = new List<float[]>();
-			StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\stancepercent.txt");
-			string line;
-			char[] delimiterChars = { ',', '[', ']' };
+		//public JsonResult FindStancePercent()
+		//{
+		//	List<float[]> data = new List<float[]>();
+		//	StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\stancepercent.txt");
+		//	string line;
+		//	char[] delimiterChars = { ',', '[', ']' };
 
-			while ((line = reader.ReadLine()) != null)
-			{
-				string[] stringInput = line.Split(delimiterChars);
-				float[] array = new float[2];
-				array[0] = (float)Convert.ToDouble(stringInput[1]);
-				array[1] = (float)Convert.ToDouble(stringInput[2]);
-				data.Add(array);
-			}
+		//	while ((line = reader.ReadLine()) != null)
+		//	{
+		//		string[] stringInput = line.Split(delimiterChars);
+		//		float[] array = new float[2];
+		//		array[0] = (float)Convert.ToDouble(stringInput[1]);
+		//		array[1] = (float)Convert.ToDouble(stringInput[2]);
+		//		data.Add(array);
+		//	}
 
-			reader.Close();
-			var jsonData = Json(data, JsonRequestBehavior.AllowGet);
-			return (jsonData);
-		}
+		//	reader.Close();
+		//	var jsonData = Json(data, JsonRequestBehavior.AllowGet);
+		//	return (jsonData);
+		//}
 
-		public JsonResult FindSwingPercent()
-		{
-			List<float[]> data = new List<float[]>();
-			StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\swingpercent.txt");
-			string line;
-			char[] delimiterChars = { ',', '[', ']' };
+		//public JsonResult FindSwingPercent()
+		//{
+		//	List<float[]> data = new List<float[]>();
+		//	StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\swingpercent.txt");
+		//	string line;
+		//	char[] delimiterChars = { ',', '[', ']' };
 
-			while ((line = reader.ReadLine()) != null)
-			{
-				string[] stringInput = line.Split(delimiterChars);
-				float[] array = new float[2];
-				array[0] = (float)Convert.ToDouble(stringInput[1]);
-				array[1] = (float)Convert.ToDouble(stringInput[2]);
-				data.Add(array);
-			}
+		//	while ((line = reader.ReadLine()) != null)
+		//	{
+		//		string[] stringInput = line.Split(delimiterChars);
+		//		float[] array = new float[2];
+		//		array[0] = (float)Convert.ToDouble(stringInput[1]);
+		//		array[1] = (float)Convert.ToDouble(stringInput[2]);
+		//		data.Add(array);
+		//	}
 
-			reader.Close();
-			var jsonData = Json(data, JsonRequestBehavior.AllowGet);
-			return (jsonData);
-		}
+		//	reader.Close();
+		//	var jsonData = Json(data, JsonRequestBehavior.AllowGet);
+		//	return (jsonData);
+		//}
 
-		public JsonResult FindSinglePercent()
-		{
-			List<float[]> data = new List<float[]>();
-			StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\singlepercent.txt");
-			string line;
-			char[] delimiterChars = { ',', '[', ']' };
+		//public JsonResult FindSinglePercent()
+		//{
+		//	List<float[]> data = new List<float[]>();
+		//	StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\singlepercent.txt");
+		//	string line;
+		//	char[] delimiterChars = { ',', '[', ']' };
 
-			while ((line = reader.ReadLine()) != null)
-			{
-				string[] stringInput = line.Split(delimiterChars);
-				float[] array = new float[2];
-				array[0] = (float)Convert.ToDouble(stringInput[1]);
-				array[1] = (float)Convert.ToDouble(stringInput[2]);
-				data.Add(array);
-			}
+		//	while ((line = reader.ReadLine()) != null)
+		//	{
+		//		string[] stringInput = line.Split(delimiterChars);
+		//		float[] array = new float[2];
+		//		array[0] = (float)Convert.ToDouble(stringInput[1]);
+		//		array[1] = (float)Convert.ToDouble(stringInput[2]);
+		//		data.Add(array);
+		//	}
 
-			reader.Close();
-			var jsonData = Json(data, JsonRequestBehavior.AllowGet);
-			return (jsonData);
-		}
+		//	reader.Close();
+		//	var jsonData = Json(data, JsonRequestBehavior.AllowGet);
+		//	return (jsonData);
+		//}
 
-		public JsonResult FindStrideLength()
-		{
-			List<float[]> data = new List<float[]>();
-			StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\stridelength.txt");
-			string line;
-			char[] delimiterChars = { ',', '[', ']' };
+		//public JsonResult FindStrideLength()
+		//{
+		//	List<float[]> data = new List<float[]>();
+		//	StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\stridelength.txt");
+		//	string line;
+		//	char[] delimiterChars = { ',', '[', ']' };
 
-			while ((line = reader.ReadLine()) != null)
-			{
-				string[] stringInput = line.Split(delimiterChars);
-				float[] array = new float[2];
-				array[0] = (float)Convert.ToDouble(stringInput[1]);
-				array[1] = (float)Convert.ToDouble(stringInput[2]);
-				data.Add(array);
-			}
+		//	while ((line = reader.ReadLine()) != null)
+		//	{
+		//		string[] stringInput = line.Split(delimiterChars);
+		//		float[] array = new float[2];
+		//		array[0] = (float)Convert.ToDouble(stringInput[1]);
+		//		array[1] = (float)Convert.ToDouble(stringInput[2]);
+		//		data.Add(array);
+		//	}
 
-			reader.Close();
-			var jsonData = Json(data, JsonRequestBehavior.AllowGet);
-			return (jsonData);
-		}
+		//	reader.Close();
+		//	var jsonData = Json(data, JsonRequestBehavior.AllowGet);
+		//	return (jsonData);
+		//}
 
-		public JsonResult FindStepLength()
-		{
-			List<float[]> data = new List<float[]>();
-			StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\steplength.txt");
-			string line;
-			char[] delimiterChars = { ',', '[', ']' };
+		//public JsonResult FindStepLength()
+		//{
+		//	List<float[]> data = new List<float[]>();
+		//	StreamReader reader = new StreamReader("C:\\Users\\Kate\\Desktop\\Data\\steplength.txt");
+		//	string line;
+		//	char[] delimiterChars = { ',', '[', ']' };
 
-			while ((line = reader.ReadLine()) != null)
-			{
-				string[] stringInput = line.Split(delimiterChars);
-				float[] array = new float[2];
-				array[0] = (float)Convert.ToDouble(stringInput[1]);
-				array[1] = (float)Convert.ToDouble(stringInput[2]);
-				data.Add(array);
-			}
+		//	while ((line = reader.ReadLine()) != null)
+		//	{
+		//		string[] stringInput = line.Split(delimiterChars);
+		//		float[] array = new float[2];
+		//		array[0] = (float)Convert.ToDouble(stringInput[1]);
+		//		array[1] = (float)Convert.ToDouble(stringInput[2]);
+		//		data.Add(array);
+		//	}
 
-			reader.Close();
-			var jsonData = Json(data, JsonRequestBehavior.AllowGet);
-			return (jsonData);
-		}
+		//	reader.Close();
+		//	var jsonData = Json(data, JsonRequestBehavior.AllowGet);
+		//	return (jsonData);
+		//}
 
 	}
 }

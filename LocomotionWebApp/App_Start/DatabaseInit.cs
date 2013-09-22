@@ -57,15 +57,6 @@ namespace LocomotionWebApp.App_Start
 					};
 				c.Users.Add(testUser);
 
-				//c.Networks.Add(testnet1);
-				//XDocument doc = XDocument.Load(HttpContext.Current.Server.MapPath(@"\App_Data\MexNewSampleInputs.xml"));				
-				//var xmlE = new XmlEngine();
-				//var xmlnetwork = xmlE.XmlFileToNetwork(doc);
-				//xmlnetwork.Name = "Example file network test";
-				//xmlnetwork.Author = testUser;
-				//xmlnetwork.LastEdit = DateTime.Now;
-				//c.Networks.Add(xmlnetwork);
-
 				try
 				{
 					c.SaveChanges();
