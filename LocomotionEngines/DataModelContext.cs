@@ -18,7 +18,8 @@ namespace LocomotionEngines
 
 		public DbSet<Patient> Patients { get; set; }
 
-		public DataModelContext() : base()
+		public DataModelContext()
+			: base("Server=koaaladb.c7v1hrkwxvoj.us-east-1.rds.amazonaws.com,1433;Database=koaaladb;User Id=katerilett;password=koaalaclinic")
 		{ }
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)

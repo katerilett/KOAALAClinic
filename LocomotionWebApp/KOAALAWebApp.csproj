@@ -44,7 +44,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="GurobiPlugIn, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -139,13 +140,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Account\AccessModel.cs" />
-    <Compile Include="Models\Account\LoginModel.cs" />
-    <Compile Include="Models\Account\NameModel.cs" />
-    <Compile Include="Models\ViewModels\ReportViewModel.cs" />
-    <Compile Include="Models\ViewModels\PatientListViewModel.cs" />
-    <Compile Include="Models\ViewModels\HomeViewModel.cs" />
-    <Compile Include="Models\ViewModels\PatientViewModel.cs" />
+    <Compile Include="Content\Models\Account\AccessModel.cs" />
+    <Compile Include="Content\Models\Account\LoginModel.cs" />
+    <Compile Include="Content\Models\Account\NameModel.cs" />
+    <Compile Include="Content\Models\ViewModels\ReportViewModel.cs" />
+    <Compile Include="Content\Models\ViewModels\PatientListViewModel.cs" />
+    <Compile Include="Content\Models\ViewModels\HomeViewModel.cs" />
+    <Compile Include="Content\Models\ViewModels\PatientViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -295,13 +296,21 @@
     <Content Include="Views\Example html\HighCharts.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Config\connectionStrings.config">
+    <None Include="Properties\PublishProfiles\Default Settings %282%29.pubxml">
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="App_Config\productionConnectionStrings.config">
+    </None>
+    <None Include="Properties\PublishProfiles\Default Settings %283%29.pubxml" />
+    <None Include="Properties\PublishProfiles\Default Settings %284%29.pubxml" />
+    <None Include="Properties\PublishProfiles\Default Settings %285%29.pubxml" />
+    <None Include="Properties\PublishProfiles\Default Settings %286%29.pubxml" />
+    <None Include="Properties\PublishProfiles\Default Settings.pubxml">
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="ConnectionStrings.config" />
+    </None>
+    <None Include="Properties\PublishProfiles\Katherine Rilett.pubxml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\PublishProfiles\koaalaclinic - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\koaalaclinic - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\locomotion - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\locomotion - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\locomotion - Web Deploy %282%29.pubxml" />
