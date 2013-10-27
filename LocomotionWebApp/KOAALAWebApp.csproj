@@ -186,9 +186,12 @@
     <Content Include="Content\images\forward_disabled.png" />
     <Content Include="Content\images\forward_enabled.png" />
     <Content Include="Content\images\forward_enabled_hover.png" />
+    <Content Include="Content\img\favicon.ico" />
     <Content Include="Content\img\glyphicons-halflings-white.png" />
     <Content Include="Content\img\glyphicons-halflings.png" />
     <Content Include="Content\img\homepage_pic.jpg" />
+    <Content Include="Content\img\knee_xray2.jpg" />
+    <Content Include="Content\img\KOAALAlogo.png" />
     <Content Include="Content\img\legend_gradient.png" />
     <Content Include="Content\img\quickrefp1.png" />
     <Content Include="Content\img\quickrefp2.png" />
@@ -198,7 +201,17 @@
     <Content Include="Content\images\sort_both.png" />
     <Content Include="Content\images\sort_desc.png" />
     <Content Include="Content\images\sort_desc_disabled.png" />
+    <Content Include="Content\input\avgvelocity.txt" />
+    <Content Include="Content\input\distance1.txt" />
+    <Content Include="Content\input\distance2.txt" />
+    <Content Include="Content\input\maxvelocity.txt" />
+    <Content Include="Content\input\singlepercent.txt" />
+    <Content Include="Content\input\stairsteps.txt" />
+    <Content Include="Content\input\stancepercent.txt" />
+    <Content Include="Content\input\steplength.txt" />
     <Content Include="Content\input\steps.txt" />
+    <Content Include="Content\input\stridelength.txt" />
+    <Content Include="Content\input\swingpercent.txt" />
     <Content Include="Content\js\adapters\mootools-adapter.js" />
     <Content Include="Content\js\adapters\mootools-adapter.src.js" />
     <Content Include="Content\js\adapters\prototype-adapter.js" />
@@ -236,6 +249,7 @@
     <Content Include="Content\js\highstock.js" />
     <Content Include="Content\js\highstock.src.js" />
     <Content Include="Content\js\themes\skies.js" />
+    <Content Include="Controllers\distance1.txt" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
