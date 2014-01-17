@@ -57,6 +57,8 @@ namespace LocomotionWebApp.Models.ViewModels
 
 		public string City { get; set; }
 
+		public string State { get; set; }
+
 		public string ContactName { get; set; }
 
 		public string ContactRelation { get; set; }

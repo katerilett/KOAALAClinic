@@ -184,6 +184,15 @@
 					</div>
 				</div>
 				<div class="control-group">
+					<label class="control-label" for="PatientState">
+						Current State
+					</label>
+					<div class="controls">	
+						<input type="text" id="PatientState" name="PatientState" 		
+							value="@Html.DisplayFor(m => Model.State, new { required ="true", @class = "State" })" required />							
+					</div>
+				</div>
+				<div class="control-group">
 					<label class="control-label" for="PatientEmail">
 						Email
 					</label>
@@ -647,6 +656,10 @@
 									<tr>
 										<td><strong>Current City:</strong></td>
 										<td><strong>@Html.DisplayFor(m => Model.City, new { placeholder = @Model.City })</strong></td>
+									</tr>
+									<tr>
+										<td><strong>Current State:</strong></td>
+										<td><strong>@Html.DisplayFor(m => Model.State, new { placeholder = @Model.State })</strong></td>
 									</tr>
 									<tr>
 										<td><strong>Phone Number:</strong></td>
